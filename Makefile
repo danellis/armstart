@@ -1,7 +1,8 @@
 PROJECT = bare
 SRC = start.c main.c
 
-CMSIS_HEADER = LPC11xx
+CMSIS_CORE = cm0
+CMSIS_SYSTEM = LPC11xx
 
 GCC_PREFIX = arm-none-eabi-
 CC = $(GCC_PREFIX)gcc
@@ -11,12 +12,12 @@ SIZE = $(GCC_PREFIX)size
 
 TARGET = build/$(PROJECT)
 vpath %.c src
-OBJ = $(SRC:%.c=build/%.o) build/cmsis/core_cm0.o build/cmsis/system_LPC11xx.o
+OBJ = $(SRC:%.c=build/%.o) build/cmsis/core_$(CMSIS_CORE).o build/cmsis/system_$(CMSIS_SYSTEM).o
 
 CPU_FLAGS = -mcpu=cortex-m0 -mthumb
 INC = -Isrc -Icmsis
 
-CC_FLAGS = -std=gnu99 $(CPU_FLAGS) $(INC) -Wall -funsigned-bitfields -DCMSIS_HEADER=\"$(CMSIS_HEADER).h\"
+CC_FLAGS = -std=gnu99 $(CPU_FLAGS) $(INC) -Wall -funsigned-bitfields -DCMSIS_HEADER=\"$(CMSIS_SYSTEM).h\"
 LD_FLAGS = $(CPU_FLAGS) -nostdlib -Wl,-gc-sections -Wl,-Map=$(TARGET).map -T link.ld $(OBJ)
 
 all: builddir $(TARGET).elf $(TARGET).hex $(TARGET).bin sizes
