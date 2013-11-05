@@ -20,12 +20,13 @@ INC = -Isrc -Icmsis
 CC_FLAGS = -std=gnu99 $(CPU_FLAGS) $(INC) -Wall -funsigned-bitfields -include $(CMSIS_SYSTEM).h
 LD_FLAGS = $(CPU_FLAGS) -Wl,-gc-sections -Wl,-Map=$(TARGET).map -T link.ld $(OBJ)
 
-all: builddir $(TARGET).elf $(TARGET).hex $(TARGET).bin sizes
+all: builddir $(TARGET).elf $(TARGET).hex $(TARGET).bin
 
 $(OBJ): Makefile
 
 $(TARGET).elf: $(OBJ) link.ld
 	$(CC) $(LD_FLAGS) $(OBJS) -o $@
+	$(SIZE) -B -t --common $(OBJ)
 
 $(TARGET).hex: $(TARGET).elf
 	$(OBJCOPY) -O ihex $< $@
@@ -46,8 +47,5 @@ run: all
 	lpc21isp -control $(TARGET).hex /dev/ttyUSB0 19200 12000
 
 builddir:
-	mkdir -p build
-	mkdir -p build/cmsis
-
-sizes:
-	$(SIZE) -B -t --common $(OBJ)
+	@mkdir -p build
+	@mkdir -p build/cmsis
