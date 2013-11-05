@@ -1,9 +1,14 @@
+typedef void (*constructor_t)(void);
+
 extern int __bss_start;
 extern int __bss_end;
 extern int __data_init_start;
 extern int __data_start;
 extern int __data_end;
 extern int __stack_end;
+extern constructor_t _init_array_start[];
+extern constructor_t _init_array_end[];
+
 extern int main(void);
 
 static void __startup(void) {
@@ -22,6 +27,11 @@ static void __startup(void) {
 
     // Initialize system clocks
     SystemInit();
+
+    // Call constructors
+    for (constructor_t *ctor = _init_array_start; ctor < _init_array_end; ++ctor) {
+        (*ctor)();
+    }
 
     // Jump to main
     main();
