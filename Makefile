@@ -17,8 +17,8 @@ OBJ = $(SRC:%.c=build/%.o) build/cmsis/core_$(CMSIS_CORE).o build/cmsis/system_$
 CPU_FLAGS = -mcpu=cortex-m0 -mthumb
 INC = -Isrc -Icmsis
 
-CC_FLAGS = -std=gnu99 $(CPU_FLAGS) $(INC) -Wall -funsigned-bitfields -DCMSIS_HEADER=\"$(CMSIS_SYSTEM).h\"
-LD_FLAGS = $(CPU_FLAGS) -nostdlib -Wl,-gc-sections -Wl,-Map=$(TARGET).map -T link.ld $(OBJ)
+CC_FLAGS = -std=gnu99 $(CPU_FLAGS) $(INC) -Wall -funsigned-bitfields -include $(CMSIS_SYSTEM).h
+LD_FLAGS = $(CPU_FLAGS) -Wl,-gc-sections -Wl,-Map=$(TARGET).map -T link.ld $(OBJ)
 
 all: builddir $(TARGET).elf $(TARGET).hex $(TARGET).bin sizes
 
