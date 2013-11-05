@@ -30,6 +30,7 @@ static void __startup(void) {
 }
 
 void Dummy_Handler(void) {
+    LPC_GPIO0->DATA |= 1 << 8; // LED on
     for (;;);
 }
 
