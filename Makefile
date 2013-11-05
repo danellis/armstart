@@ -43,8 +43,8 @@ build/cmsis/%.o: cmsis/%.c
 clean:
 	rm -rf build
 
-run: all
-	lpc21isp -control $(TARGET).hex /dev/ttyUSB0 19200 12000
+program: all
+	lpc21isp $(TARGET).hex /dev/ttyUSB0 115200 12000
 
 builddir:
 	@mkdir -p build
