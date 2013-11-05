@@ -18,7 +18,7 @@ CPU_FLAGS = -mcpu=cortex-m0 -mthumb
 INC = -Isrc -Icmsis
 
 CC_FLAGS = -std=gnu99 $(CPU_FLAGS) $(INC) -Wall -funsigned-bitfields -include $(CMSIS_SYSTEM).h
-LD_FLAGS = $(CPU_FLAGS) -Wl,-gc-sections -Wl,-Map=$(TARGET).map -T link.ld $(OBJ)
+LD_FLAGS = -nostartfiles $(CPU_FLAGS) -Wl,-gc-sections -Wl,-Map=$(TARGET).map -T link.ld $(OBJ)
 
 all: builddir $(TARGET).elf $(TARGET).hex $(TARGET).bin
 
