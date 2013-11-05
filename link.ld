@@ -8,14 +8,14 @@ MEMORY {
 SECTIONS {
     .bss : {
         __bss_start = .;
-        *(.bss .bss.* .gnu.linkonce.b.*);
+        *(.bss .bss.* .gnu.linkonce.b.*)
         __bss_end = .;
     } > ram
 
     .text : {
-        KEEP(*(.vectors));
+        KEEP(*(.vectors))
 
-        *(.rodata .rodata.* .gnu.linkonce.r.*);
+        *(.rodata .rodata.* .gnu.linkonce.r.*)
 
         _init_array_start = .;
         KEEP(*(.init_array))
@@ -26,7 +26,7 @@ SECTIONS {
     .data : {
         __data_init_start = LOADADDR(.data);
         __data_start = .;
-        *(.data .data.* .gnu.linkonce.d.*);
+        *(.data .data.* .gnu.linkonce.d.*)
         __data_end = .;
     } > ram AT > rom
 
