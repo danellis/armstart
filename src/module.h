@@ -5,4 +5,4 @@ typedef struct moduledesc {
     moduleinit init;
 } moduledesc;
 
-#define MODULE(SYMBOL) static moduledesc SYMBOL __attribute__((section("modules")))
+#define MODULE(SYMBOL) static moduledesc SYMBOL __attribute__((section("modules"), used))
