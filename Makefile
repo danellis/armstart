@@ -1,8 +1,8 @@
 PROJECT = bare
 SRC = start.c main.c uart.c
 
-CMSIS_CORE = cm0
-CMSIS_SYSTEM = LPC11xx
+CMSIS_CORE = cm3
+CMSIS_SYSTEM = LPC17xx
 
 GCC_PREFIX = arm-none-eabi-
 CC = $(GCC_PREFIX)gcc
@@ -12,20 +12,20 @@ SIZE = $(GCC_PREFIX)size
 
 TARGET = build/$(PROJECT)
 vpath %.c src
-OBJ = $(SRC:%.c=build/%.o) build/cmsis/core_$(CMSIS_CORE).o build/cmsis/system_$(CMSIS_SYSTEM).o
+OBJ = $(SRC:%.c=build/%.o) build/cmsis/$(CMSIS_SYSTEM)/core_$(CMSIS_CORE).o build/cmsis/$(CMSIS_SYSTEM)/system_$(CMSIS_SYSTEM).o
 
-CPU_FLAGS = -mcpu=cortex-m0 -mthumb
+CPU_FLAGS = -mcpu=cortex-m3 -mthumb
 INC = -Isrc -Icmsis
 
-CC_FLAGS = -std=gnu99 $(CPU_FLAGS) $(INC) -Wall -funsigned-bitfields -include $(CMSIS_SYSTEM).h
-LD_FLAGS = -nostartfiles $(CPU_FLAGS) -Wl,-gc-sections -Wl,-Map=$(TARGET).map -T link.ld $(OBJ)
+CC_FLAGS = -std=gnu99 $(CPU_FLAGS) $(INC) -Wall -funsigned-bitfields -include $(CMSIS_SYSTEM)/$(CMSIS_SYSTEM).h
+LD_FLAGS = -nostartfiles $(CPU_FLAGS) -Wl,-gc-sections -Wl,-Map=$(TARGET).map -T link.ld
 
 all: builddir $(TARGET).elf $(TARGET).hex $(TARGET).bin
 
 $(OBJ): Makefile
 
 $(TARGET).elf: $(OBJ) link.ld
-	$(CC) $(LD_FLAGS) $(OBJS) -o $@
+	$(CC) $(LD_FLAGS) $(OBJ) -o $@
 	$(SIZE) -B -t --common $(OBJ)
 
 $(TARGET).hex: $(TARGET).elf
@@ -37,15 +37,15 @@ $(TARGET).bin: $(TARGET).elf
 build/%.o: %.c
 	$(CC) -c $(CC_FLAGS) -o $@ $<
 
-build/cmsis/%.o: cmsis/%.c
+build/cmsis/$(CMSIS_SYSTEM)/%.o: cmsis/$(CMSIS_SYSTEM)/%.c
 	$(CC) -c $(CC_FLAGS) -o $@ @<
 
 clean:
 	rm -rf build
 
 program: all
-	lpc21isp $(TARGET).hex /dev/ttyUSB0 115200 12000
+	lpc21isp -control $(TARGET).hex /dev/ttyUSB1 115200 12000
 
 builddir:
 	@mkdir -p build
-	@mkdir -p build/cmsis
+	@mkdir -p build/cmsis/$(CMSIS_SYSTEM)

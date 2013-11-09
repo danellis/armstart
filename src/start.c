@@ -12,8 +12,9 @@ extern moduledesc __modules_end[];
 extern int main(void);
 
 static void __startup(void) {
-    LPC_GPIO0->DIR |= 1 << 8; // GPIO0_8 is an output
-    LPC_GPIO0->DATA &= ~(1 << 8); // LED off
+    // Exception LED
+    LPC_GPIO2->FIODIR |= 1 << 13;
+    LPC_GPIO2->FIOCLR |= 1 << 13;
 
     // Zero out .bss section
     for (int *ptr = &__bss_start; ptr < &__bss_end; ++ptr) {
@@ -40,7 +41,8 @@ static void __startup(void) {
 }
 
 void Dummy_Handler(void) {
-    LPC_GPIO0->DATA |= 1 << 8; // LED on
+    // Light exception LED
+    LPC_GPIO2->FIOSET |= 1 << 13;
     for (;;);
 }
 
