@@ -1,4 +1,9 @@
-#define __driver_init __attribute__((constructor(101)))
+#include "module.h"
 
-void __driver_init uart_init(void) {
+static void uart_init(void) {
 }
+
+MODULE(uart_module) = {
+    "uart",
+    uart_init
+};

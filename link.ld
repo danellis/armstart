@@ -17,10 +17,9 @@ SECTIONS {
 
         *(.rodata .rodata.* .gnu.linkonce.r.*)
 
-        _init_array_start = .;
-        KEEP(*(.init_array))
-        KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)))
-        _init_array_end = .;
+        __modules_start = .;
+        KEEP(*(modules))
+        __modules_end = .;
     } > rom
 
     .data : {
