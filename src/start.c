@@ -1,4 +1,5 @@
 #include "module.h"
+#include "debug.h"
 
 extern int __bss_start;
 extern int __bss_end;
@@ -29,12 +30,21 @@ static void __startup(void) {
     // Initialize system clocks
     SystemInit();
 
+    debug_init();
+    debug_puts(" _    ________________________\n| |  / / ____/ ____/_  __/ __ \\\n| | / / __/ / /     / / / /_/ /\n");
+    debug_puts("| |/ / /___/ /___  / / / _, _/\n|___/_____/\\____/ /_/ /_/ |_|\n");
+    debug_puts("Firmware booting\n");
+
     // Call constructors
     for (module_t *module = __modules_start; module < __modules_end; ++module) {
+        debug_puts("Initializing module ");
+        debug_puts(module->name);
+        debug_putc('\n');
         module->init();
     }
 
     // Jump to main
+    debug_puts("Jumping to main function\n");
     main();
 
     for (;;);

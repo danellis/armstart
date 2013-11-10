@@ -1,5 +1,5 @@
 PROJECT = bare
-SRC = start.c task.c main.c uart.c
+SRC = start.c task.c main.c uart.c debug.c
 
 CMSIS_CORE = cm3
 CMSIS_SYSTEM = LPC17xx
@@ -44,7 +44,7 @@ clean:
 	rm -rf build
 
 program: all
-	lpc21isp -control $(TARGET).hex /dev/ttyUSB1 115200 12000
+	lpc21isp -control -term $(TARGET).hex /dev/ttyUSB1 115200 12000
 
 builddir:
 	@mkdir -p build
