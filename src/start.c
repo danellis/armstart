@@ -6,7 +6,7 @@ extern int __bss_end;
 extern int __data_init_start;
 extern int __data_start;
 extern int __data_end;
-extern int __stack_end;
+extern int __main_stack_end;
 extern module_t __modules_start[];
 extern module_t __modules_end[];
 
@@ -69,7 +69,7 @@ void PendSV_Handler(void) WEAK_ALIAS(Dummy_Handler);
 void SysTick_Handler(void) WEAK_ALIAS(Dummy_Handler);
 
 static void *__vectors[16] __attribute__((section(".vectors"), unused)) = {
-    &__stack_end,
+    &__main_stack_end,
     __startup,
     NMI_Handler,
     HardFault_Handler,

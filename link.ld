@@ -30,7 +30,10 @@ SECTIONS {
     } > ram AT > rom
 
     .stack : {
+        . = ALIGN(4);
         . += (__stack_size * 8);
-        __stack_end = .;
+        __ps_stack_end = .;
+        . += (__stack_size);
+        __main_stack_end = .;
     } > ram
 }

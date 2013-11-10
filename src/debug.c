@@ -23,3 +23,12 @@ void debug_puts(const char *s) {
         debug_putc(c);
     }
 }
+
+static const char *hex_chars = "0123456789abcdef";
+
+void debug_putptr(void *ptr) {
+    uint32_t i = (uint32_t) ptr;
+    for (int n = 28; n >=0; n -= 4) {
+        debug_putc(hex_chars[(i >> n) & 0xf]);
+    }
+}

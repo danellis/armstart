@@ -35,7 +35,7 @@ $(TARGET).bin: $(TARGET).elf
 	$(OBJCOPY) -O binary $< $@
 
 build/%.o: %.c
-	$(CC) -c $(CC_FLAGS) -o $@ $<
+	$(CC) -c $(CC_FLAGS) -Wa,-anhls=$(@:%.o=%.s) -o $@ $<
 
 build/cmsis/$(CMSIS_SYSTEM)/%.o: cmsis/$(CMSIS_SYSTEM)/%.c
 	$(CC) -c $(CC_FLAGS) -o $@ @<

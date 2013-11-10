@@ -2,7 +2,7 @@
 #define TASK_H
 
 #define STACK_SIZE 1024
-#define MAX_TASKS 2
+#define MAX_TASKS 4
 
 extern void init_tasks(void);
 
@@ -29,6 +29,11 @@ typedef struct {
     uint32_t r10;
     uint32_t r11;
 } sw_context_t;
+
+typedef struct {
+    sw_context_t sw;
+    hw_context_t hw;
+} task_context_t;
 
 typedef struct {
     uint8_t bottom[STACK_SIZE - sizeof(hw_context_t)];
