@@ -8,22 +8,21 @@ task_t tasks[MAX_TASKS];
 static int current_task = 0;
 static int num_tasks = 1;
 
-void *save_context(void) {
-    register void *sp asm("r0");
-    __asm__ ("mrs %0, psp\n\tstmfd %0!, {r4-r11}" :: "r" (sp));
-    return sp;
+void schedule(void) {
+    if (++current_task == num_tasks) current_task = 0;
 }
 
 __attribute__((naked)) void SysTick_Handler(void) {
+    register void *sp __asm__("r0");
+
     __asm__("push {lr}");
-    void *sp = save_context();
+    __asm__ ("mrs %0, psp\n\tstmfd %0!, {r4-r11}" :: "r" (sp));
+
     tasks[current_task].sp = sp;
-    if (++current_task == num_tasks) current_task = 0;
+    schedule();
     sp = tasks[current_task].sp;
 
-    __asm__("mov r0, r4\n\tldmfd r0!, {r4-r11}");
-    __asm__("msr psp, r0");
-    __asm__("pop {pc}");
+    __asm__("ldmfd %0!, {r4-r11}; msr psp, %0; pop {pc}" : "=r" (sp));
 }
 
 __attribute__((naked, noreturn)) static void task0(void) {
