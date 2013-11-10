@@ -298,7 +298,7 @@
 #define PLL0_SETUP            1
 // #define PLL0CFG_Val           0x00050063
 #define PLL0CFG_Val           0x00000013 // 480MHz Fcco
-#define PLL1_SETUP            0
+#define PLL1_SETUP            1
 #define PLL1CFG_Val           0x00000023
 #define CCLKCFG_Val           0x00000003 // 120MHz CPU
 #define USBCLKCFG_Val         0x00000000
