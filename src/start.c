@@ -1,5 +1,6 @@
 #include "module.h"
 #include "debug.h"
+#include "task.h"
 
 extern int __bss_start;
 extern int __bss_end;
@@ -36,16 +37,28 @@ static void __startup(void) {
     debug_puts("Firmware booting\n");
 
     // Call constructors
+    debug_puts("Initializing modules: ");
     for (module_t *module = __modules_start; module < __modules_end; ++module) {
-        debug_puts("Initializing module ");
-        debug_puts(module->name);
-        debug_putc('\n');
-        module->init();
+        if (module->init) {
+            debug_puts(module->name);
+            debug_putc(' ');
+            module->init();
+        }
     }
+    debug_putc('\n');
 
-    // Jump to main
-    debug_puts("Jumping to main function\n");
-    main();
+    debug_puts("Starting module tasks: ");
+    for (module_t *module = __modules_start; module < __modules_end; ++module) {
+        if (module->entry) {
+            debug_puts(module->name);
+            debug_putc(' ');
+            task_create(module->entry);
+        }
+    }
+    debug_putc('\n');
+
+    // Become task0 (idle task)
+    become_task0();
 
     for (;;);
 }

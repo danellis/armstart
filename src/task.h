@@ -2,11 +2,13 @@
 #define TASK_H
 
 #define STACK_SIZE 1024
-#define MAX_TASKS 4
+#define MAX_TASKS 8
 
 extern void init_tasks(void);
 
 typedef void (*task_entry_t)(void);
+void task_create(task_entry_t entry);
+void become_task0(void);
 
 typedef struct {
     uint32_t r0;
@@ -43,7 +45,6 @@ typedef struct {
 typedef struct {
     void *sp;
     struct {
-        unsigned suspended:1;
     } flags;
 } task_t;
 
