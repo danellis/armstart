@@ -1,5 +1,5 @@
 PROJECT = bare
-SRC = start.c main.c uart.c
+SRC = start.c task.c main.c uart.c
 
 CMSIS_CORE = cm3
 CMSIS_SYSTEM = LPC17xx

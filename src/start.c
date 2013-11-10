@@ -6,8 +6,8 @@ extern int __data_init_start;
 extern int __data_start;
 extern int __data_end;
 extern int __stack_end;
-extern moduledesc __modules_start[];
-extern moduledesc __modules_end[];
+extern module_t __modules_start[];
+extern module_t __modules_end[];
 
 extern int main(void);
 
@@ -30,7 +30,7 @@ static void __startup(void) {
     SystemInit();
 
     // Call constructors
-    for (moduledesc *module = __modules_start; module < __modules_end; ++module) {
+    for (module_t *module = __modules_start; module < __modules_end; ++module) {
         module->init();
     }
 

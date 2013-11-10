@@ -1,8 +1,8 @@
 __stack_size = 1024;
 
 MEMORY {
-    rom(rx) : org = 0x00000000, len = 32k
-    ram(rwx) : org = 0x10000000, len = 4k
+    rom(rx) : org = 0x00000000, len = 512k
+    ram(rwx) : org = 0x10000000, len = 32k
 }
 
 SECTIONS {
@@ -30,7 +30,7 @@ SECTIONS {
     } > ram AT > rom
 
     .stack : {
-        . += __stack_size;
+        . += (__stack_size * 8);
         __stack_end = .;
     } > ram
 }
