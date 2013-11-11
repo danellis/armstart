@@ -26,14 +26,15 @@ __attribute__((naked)) void SysTick_Handler(void) {
 }
 
 __attribute__((naked, noreturn)) static void task0(void) {
+    debug_puts("Start of task 0\n");
     for (;;) {
         // if (LPC_GPIO0->FIOPIN & (1 << 22)) {
         //     LPC_GPIO0->FIOCLR |= 1 << 22;
         // } else {
         //     LPC_GPIO0->FIOSET |= 1 << 22;
         // }
-        debug_putc('0');
-        for (int i = 0; i < 0x100000; ++i);
+        // debug_putc('0');
+        // for (int i = 0; i < 0x10000; ++i);
     }
 }
 
@@ -65,6 +66,7 @@ void become_task0(void) {
 
     debug_puts("Becoming task 0\n");
     __set_PSP((uint32_t) &__ps_stack_end[0]);
+    __ISB();
     __set_CONTROL(0b11);
     task0();
 }

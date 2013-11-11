@@ -14,6 +14,7 @@ static void uart_puts(const char *s) {
         uart_putc(c);
     }
 }
+
 static void uart_init(void) {
     LPC_SC->PCONP |= 1 << 25;
     LPC_PINCON->PINSEL1 |= 0b1111 << 18;
@@ -25,12 +26,22 @@ static void uart_init(void) {
     uart->DLM = 0;
     uart->FDR = 0xe5;
     uart->LCR = 0b00000011;
+}
 
-    uart_puts("Testing\n");
+static void uart_svc_handler(uint32_t *sp) {
+    uart_puts((const char *) sp[0]);
 }
 
 MODULE(uart_module) = {
     "uart",
     uart_init,
-    0
+    0, // No task
+    1, // SVC number
+    uart_svc_handler
 };
+
+SVC(1, void, Uart_Write, const char *str);
+
+// void Uart_Write(const char *str) {
+//     uart_puts(str);
+// }

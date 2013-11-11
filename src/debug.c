@@ -15,6 +15,7 @@ void debug_putc(char c) {
     LPC_UART_TypeDef *uart = LPC_UART0;
     while ((uart->LSR & (1 << 5)) == 0);
     uart->THR = c;
+    while ((uart->LSR & (1 << 5)) == 0);
 }
 
 void debug_puts(const char *s) {
@@ -31,4 +32,9 @@ void debug_putptr(void *ptr) {
     for (int n = 28; n >=0; n -= 4) {
         debug_putc(hex_chars[(i >> n) & 0xf]);
     }
+}
+
+void debug_put8(uint8_t value) {
+    debug_putc(hex_chars[value >> 8]);
+    debug_putc(hex_chars[value & 0xf]);
 }

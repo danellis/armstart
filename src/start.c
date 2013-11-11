@@ -8,8 +8,6 @@ extern int __data_init_start;
 extern int __data_start;
 extern int __data_end;
 extern int __main_stack_end;
-extern module_t __modules_start[];
-extern module_t __modules_end[];
 
 extern int main(void);
 
@@ -38,7 +36,7 @@ static void __startup(void) {
 
     // Call constructors
     debug_puts("Initializing modules: ");
-    for (module_t *module = __modules_start; module < __modules_end; ++module) {
+    foreach_module(module) {
         if (module->init) {
             debug_puts(module->name);
             debug_putc(' ');
@@ -48,7 +46,7 @@ static void __startup(void) {
     debug_putc('\n');
 
     debug_puts("Starting module tasks: ");
-    for (module_t *module = __modules_start; module < __modules_end; ++module) {
+    foreach_module(module) {
         if (module->entry) {
             debug_puts(module->name);
             debug_putc(' ');

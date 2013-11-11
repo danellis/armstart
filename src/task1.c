@@ -1,10 +1,12 @@
 #include "module.h"
 #include "debug.h"
+#include "uart.h"
 
 __attribute__((naked, noreturn)) static void task1_entry(void) {
+    debug_puts("Start of task 1\n");
     for (;;) {
-        debug_putc('1');
-        for (int i = 0; i < 0x10000; ++i);
+        Uart_Write("1");
+        for (int i = 0; i < 0x1000; ++i);
     }
 }
 
