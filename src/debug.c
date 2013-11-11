@@ -35,6 +35,13 @@ void debug_putptr(void *ptr) {
 }
 
 void debug_put8(uint8_t value) {
-    debug_putc(hex_chars[value >> 8]);
+    debug_putc(hex_chars[value >> 4]);
     debug_putc(hex_chars[value & 0xf]);
+}
+
+void debug_put32(uint32_t value) {
+    debug_put8(value >> 24);
+    debug_put8((value >> 16) & 0xff);
+    debug_put8((value >> 8) & 0xff);
+    debug_put8(value & 0xff);
 }

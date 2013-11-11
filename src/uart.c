@@ -28,19 +28,26 @@ static void uart_init(void) {
     uart->LCR = 0b00000011;
 }
 
-static void uart_svc_handler(uint32_t *sp) {
-    uart_puts((const char *) sp[0]);
+static void uart_svc_handler(uint32_t reason, uint32_t *sp) {
+    switch (reason) {
+        case 1:
+            uart_puts((const char *) sp[0]);
+            break;
+        default:
+            debug_puts("Bad reason code\n");
+    }
 }
 
 MODULE(uart_module) = {
     "uart",
     uart_init,
     0, // No task
-    1, // SVC number
+    0xffffff00, // SVC mask
+    0x00000100, // SVC number
     uart_svc_handler
 };
 
-SVC(1, void, Uart_Write, const char *str);
+SVC(0x101, void, Uart_Write, const char *str);
 
 // void Uart_Write(const char *str) {
 //     uart_puts(str);

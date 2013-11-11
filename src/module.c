@@ -2,14 +2,15 @@
 #include "module.h"
 
 static void handle_svc(uint32_t *sp) {
-    uint32_t pc = sp[6];
-    uint8_t svc_number = *(uint8_t *) (pc - 2);
+    sp[5] += 2; // Skip over SVC LSBs
+    uint8_t *pc = (uint8_t *) (sp[6] - 2);
+    uint32_t svc_number = (pc[0] << 16) | (pc[3] << 8) | (pc[2]) ;
 
     int dispatched = 0;
     foreach_module(module) {
-        if (module->svc_number == svc_number) {
+        if (module->svc_number == (svc_number & module->svc_mask)) {
             dispatched = 1;
-            module->svc_handler(sp);
+            module->svc_handler(svc_number & ~module->svc_mask, sp);
             break;
         }
     }
