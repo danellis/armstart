@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <errno.h>
+#include <sys/stat.h>
 #include "debug.h"
 
 void *_sbrk(intptr_t increment) {
